@@ -1,0 +1,123 @@
+cloud-architecture-diagram
+
+direction right
+// Title
+title Mortenson ArcGIS Enterprise on Azure
+
+Internet [icon: cloud]
+
+// Top-level subscription group
+MortensonSubscription [icon: azure, label: "Mortenson Azure Subscription"] {
+
+  // Production Resource Group
+  ProductionRG [icon: azure-resource-group, label: "Production Resource Group", color: green] {
+    ProductionLB [icon: azure-load-balancer, label: "Load Balancer"]
+
+    ProductionVNet [icon: azure-virtual-network, label: "Production Virtual Network"] {
+      ProductionWebNSG [icon: azure-nsg, label: "Web NSG"] {
+        ProductionWebSubnet [icon: network, label: "Web Subnet"] {
+          ProdArcGISWebAdapter [icon: azure-vm, label: "ArcGIS Web Adapter"]
+        }
+      }
+
+      ProductionAppNSG [icon: azure-nsg, label: "Application NSG"] {
+        ProductionAppSubnet [icon: network, label: "Application Subnet"] {
+          ProdArcGISHosting1 [icon: azure-vm, label: "ArcGIS Hosting 1"]
+          ProdArcGISHosting2 [icon: azure-vm, label: "ArcGIS Hosting 2"]
+          ProdArcGISMapping1 [icon: azure-vm, label: "ArcGIS Mapping 1"]
+          ProdArcGISMapping2 [icon: azure-vm, label: "ArcGIS Mapping 2"]
+          ProdArcGISMappingSolar1 [icon: azure-vm, label: "ArcGIS Mapping Solar 1"]
+          ProdArcGISMappingSolar2 [icon: azure-vm, label: "ArcGIS Mapping Solar 2"]
+          ProdAGSGP [icon: azure-vm, label: "AGS GP Server"]
+          ProdFileServer [icon: azure-vm, label: "File Server"]
+          ProdGeoJobe [icon: azure-vm, label: "GeoJobe"]
+          ProdGeoEvent [icon: azure-vm, label: "GeoEvent"]
+          ProdArcGISPortal [icon: azure-vm, label: "ArcGIS Portal"]
+        }
+      }
+
+      ProductionDataNSG [icon: azure-nsg, label: "Data NSG"] {
+        ProductionDataSubnet [icon: network, label: "Data Subnet"] {
+          ProdSQLServer [icon: azure-vm, label: "SQL Server"]
+          ProdArcGISDatastore [icon: azure-vm, label: "ArcGIS Datastore"]
+        }
+      }
+    }
+
+    ProductionAzureServices [icon: azure, label: "Azure Services"] {
+      ProdAzureBackup [icon: azure, label: "Azure Backup"]
+      ProdAzureBlobStorage [icon: azure, label: "Azure Blob Storage"]
+      ProdAzureFilesStorage [icon: azure, label: "Azure Files Storage (HA Config Store)"]
+      ProdAzureDefender [icon: azure, label: "Azure Defender"]
+    }
+  }
+
+  // Management Resource Group
+  ManagementRG [icon: azure-resource-group, label: "Management Resource Group", color: purple] {
+    ManagementVNet [icon: azure-virtual-network, label: "Management Virtual Network"] {
+      ManagementNSG [icon: azure-nsg, label: "Management NSG"] {
+        ManagementSubnet [icon: network, label: "Management Subnet"] {
+          MgmtCitrixConnector [icon: azure-vm, label: "Citrix Connector"]
+          MgmtVDIHost [icon: azure-vm, label: "VDI Host with GPU"]
+          MgmtArcGISMonitor [icon: azure-vm, label: "ArcGIS Monitor"]
+        }
+      }
+    }
+  }
+
+  // Staging Resource Group
+  StagingRG [icon: azure-resource-group, label: "Stage Resource Group", color: orange] {
+    StagingLB [icon: azure-load-balancer, label: "Load Balancer"]
+
+    StagingVNet [icon: azure-virtual-network, label: "Stage Virtual Network"] {
+      StagingWebNSG [icon: azure-nsg, label: "Web NSG"] {
+        StagingWebSubnet [icon: network, label: "Web Subnet"] {
+          StgArcGISWebAdapter [icon: azure-vm, label: "ArcGIS Web Adapter"]
+        }
+      }
+
+      StagingAppNSG [icon: azure-nsg, label: "Application NSG"] {
+        StagingAppSubnet [icon: network, label: "Application Subnet"] {
+          StgAGSMapping [icon: azure-vm, label: "AGS Mapping"]
+          StgAGSSolarMapping [icon: azure-vm, label: "AGS Solarmapping"]
+          StgArcGISPortal [icon: azure-vm, label: "ArcGIS Portal"]
+          StgGeoEvent [icon: azure-vm, label: "GeoEvent"]
+          StgAGSHosting [icon: azure-vm, label: "AGS Hosting"]
+          StgAGSGP [icon: azure-vm, label: "AGS GP"]
+          StgFileServer [icon: azure-vm, label: "File Server"]
+        }
+      }
+
+      StagingDataNSG [icon: azure-nsg, label: "Data NSG"] {
+        StagingDataSubnet [icon: network, label: "Data Subnet"] {
+          StgArcGISDatastore [icon: azure-vm, label: "ArcGIS Datastore"]
+          StgSQLServer [icon: azure-vm, label: "SQL Server"]
+        }
+      }
+    }
+
+    StagingAzureServices [icon: azure, label: "Azure Services"] {
+      StgAzureBackup [icon: azure, label: "Azure Backup"]
+      StgAzureStorage [icon: azure, label: "Azure Storage"]
+      StgAzureDefender [icon: azure, label: "Azure Defender"]
+    }
+  }
+}
+
+// Connections
+ProductionVNet --> ManagementVNet: Peer [thickness: 3]
+StagingVNet --> ManagementVNet: Peer [thickness: 3]
+Internet > ProductionLB: [thickness: 3]
+Internet > StagingLB: [thickness: 3]
+MgmtVDIHost > ProductionDataSubnet: admin [thickness: 4]
+MgmtVDIHost > ProductionAppSubnet: admin [thickness: 4]
+MgmtVDIHost > StagingDataSubnet: admin [thickness: 4]
+MgmtVDIHost > StagingAppSubnet: admin [thickness: 4]
+MgmtArcGISMonitor > ProductionWebSubnet: read-only [thickness: 4]
+MgmtArcGISMonitor > ProductionAppSubnet: read-only [thickness: 4]
+MgmtArcGISMonitor > ProductionDataSubnet: read-only [thickness: 4]
+MgmtArcGISMonitor > StagingWebSubnet: read-only [thickness: 4]
+MgmtArcGISMonitor > StagingAppSubnet: read-only [thickness: 4]
+MgmtArcGISMonitor > StagingDataSubnet: read-only [thickness: 4]
+
+
