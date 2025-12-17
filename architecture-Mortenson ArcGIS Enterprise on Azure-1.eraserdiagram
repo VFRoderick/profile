@@ -1,6 +1,6 @@
 cloud-architecture-diagram
 
-direction right
+direction down
 // Title
 title Mortenson ArcGIS Enterprise on Azure
 
@@ -104,20 +104,31 @@ MortensonSubscription [icon: azure, label: "Mortenson Azure Subscription"] {
   }
 }
 
-// Connections
-ProductionVNet --> ManagementVNet: Peer [thickness: 3]
-StagingVNet --> ManagementVNet: Peer [thickness: 3]
+// Internet to Load Balancers
 Internet > ProductionLB: [thickness: 3]
 Internet > StagingLB: [thickness: 3]
+
+// Load Balancers to Web Adapters
+ProductionLB > ProdArcGISWebAdapter: [thickness: 3]
+StagingLB > StgArcGISWebAdapter: [thickness: 3]
+
+// VNet Peering
+ProductionVNet <-> ManagementVNet: Peer [style: dashed, thickness: 3]
+StagingVNet <-> ManagementVNet: Peer [style: dashed, thickness: 3]
+
+// Citrix to VDI
+MgmtCitrixConnector > MgmtVDIHost: [thickness: 3]
+
+// VDI Admin Access
 MgmtVDIHost > ProductionDataSubnet: admin [thickness: 4]
 MgmtVDIHost > ProductionAppSubnet: admin [thickness: 4]
 MgmtVDIHost > StagingDataSubnet: admin [thickness: 4]
 MgmtVDIHost > StagingAppSubnet: admin [thickness: 4]
+
+// ArcGIS Monitor (read-only)
 MgmtArcGISMonitor > ProductionWebSubnet: read-only [thickness: 4]
 MgmtArcGISMonitor > ProductionAppSubnet: read-only [thickness: 4]
 MgmtArcGISMonitor > ProductionDataSubnet: read-only [thickness: 4]
 MgmtArcGISMonitor > StagingWebSubnet: read-only [thickness: 4]
 MgmtArcGISMonitor > StagingAppSubnet: read-only [thickness: 4]
 MgmtArcGISMonitor > StagingDataSubnet: read-only [thickness: 4]
-
-
