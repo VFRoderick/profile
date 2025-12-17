@@ -42,24 +42,17 @@ At Mortenson, I proposed and implemented our first ArcGIS Enterprise system and 
 ```mermaid
 ---
 config:
-  xyChart:
-    width: 600
-    height: 400
   themeVariables:
     xyChart:
       plotColorPalette: "#7030a0, #1f4e79"
-      xAxisLabelColor: "#FFFFFF"
-      yAxisLabelColor: "#FFFFFF"
-      yAxisTickColor: "#FFFFFF"
-      titleColor: "#FFFFFF"
 ---
-xychart-beta
+xychart
     title "Growth in GIS at Mortenson"
     x-axis ["Q3 22", "Q4 22", "Q1 23", "Q2 23", "Q3 23", "Q4 23", "Q1 24", "Q2 24", "Q3 24", "Q4 24", "Q1 25", "Q2 25", "Q3 25"]
     y-axis "Total Entitlements" 0 --> 2500
-    %% Enterprise Entitlements (Purple - matches first color in palette)
+    %% Enterprise Entitlements (Purple)
     bar [47, 61, 171, 229, 299, 370, 439, 554, 678, 801, 967, 1188, 1436]
-    %% AGOL Entitlements (Blue - matches second color in palette)
+    %% AGOL Entitlements (Blue)
     bar [123, 133, 155, 187, 223, 236, 272, 313, 368, 444, 525, 717, 981]
 ```
 
